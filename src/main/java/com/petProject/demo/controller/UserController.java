@@ -21,12 +21,13 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<UserResponseDto<List<UserDto>>> getAll() {
         List<UserDto> users = userService.getAll();
+
         return ResponseEntity
-        .ok()
-        .body(UserResponseDto.<List<UserDto>>builder()
-            .message("List of users")
-            .body(users)
-            .build()
-        );
+            .ok()
+            .body(UserResponseDto.<List<UserDto>>builder()
+                .message("List of users")
+                .body(users)
+                .build()
+            );
     }
 }

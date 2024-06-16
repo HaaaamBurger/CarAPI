@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.petProject.demo.common.mapper.UserMapper;
 import com.petProject.demo.dto.UserDto;
@@ -15,10 +15,11 @@ import com.petProject.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Component
+@Service
 public class UserService implements UserDetailsService {
 
     private final UserMapper userMapper;
+
     private final UserRepository userRepository;
 
     public List<UserDto> getAll() {
@@ -27,7 +28,6 @@ public class UserService implements UserDetailsService {
             return userMapper.toDto(user);
         }).toList();
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) {
