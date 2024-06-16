@@ -1,8 +1,11 @@
 package com.petProject.demo.common.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.petProject.demo.dto.UserDto;
 import com.petProject.demo.model.User;
 
+@Component
 public class UserMapper {
     public UserDto toDto(User user) {
         return UserDto
