@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.petProject.demo.dto.UserDto;
@@ -19,15 +20,16 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<UserResponseDto<List<UserDto>>> getAll() {
-        List<UserDto> users = userService.getAll();
+    public ResponseEntity<UserResponseDto<List<UserDto>>> getAll(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+        List<UserDto> users = userService.getAll(page, size);
 
         return ResponseEntity
-            .ok()
-            .body(UserResponseDto.<List<UserDto>>builder()
-                .message("List of users")
-                .body(users)
-                .build()
-            );
+                .ok()
+                .body(UserResponseDto.<List<UserDto>>builder()
+                        .message("List of users")
+                        .users((long) users.size())
+                        .body(users)
+                        .build()
+                );
     }
 }

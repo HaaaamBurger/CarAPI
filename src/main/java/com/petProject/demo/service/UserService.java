@@ -2,6 +2,7 @@ package com.petProject.demo.service;
 
 import java.util.List;
 
+import com.petProject.demo.common.util.UserUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,11 +23,17 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public List<UserDto> getAll() {
+    private final UserUtil userUtil;
+
+    public List<UserDto> getAll(Integer page, Integer size) {
         List<User> users = userRepository.findAll();
-        return users.stream().map(user -> {
-            return userMapper.toDto(user);
-        }).toList();
+
+        if (page != null || size != null) {
+           List<User> paginatedUsers = userUtil.paginateList(page, size, users);
+           return users.stream().map(userMapper::toDto).toList();
+        }
+
+        return users.stream().map(userMapper::toDto).toList();
     }
 
     @Override
