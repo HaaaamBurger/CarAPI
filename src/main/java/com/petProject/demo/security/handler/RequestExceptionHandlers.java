@@ -1,6 +1,8 @@
 package com.petProject.demo.security.handler;
 
 import com.petProject.demo.dto.ExceptionResponseDto;
+import com.petProject.demo.security.exception.UnexpectedUserRoleException;
+import com.petProject.demo.security.exception.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,7 +37,33 @@ public class RequestExceptionHandlers {
                         .builder()
                         .createdAt(new Date())
                         .status(HttpStatus.BAD_REQUEST)
-                        .message("No body provided...")
+                        .message("No body provided.")
+                        .build()
+                );
+    }
+
+    @ExceptionHandler({UserAlreadyExistsException.class})
+    public ResponseEntity<ExceptionResponseDto> userAlreadyExistsHandler(UserAlreadyExistsException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponseDto
+                        .builder()
+                        .createdAt(new Date())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(exception.getMessage())
+                        .build()
+                );
+    }
+
+    @ExceptionHandler({UnexpectedUserRoleException.class})
+    public ResponseEntity<ExceptionResponseDto> unexpectedUserRoleException(UnexpectedUserRoleException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponseDto
+                        .builder()
+                        .createdAt(new Date())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(exception.getMessage())
                         .build()
                 );
     }
