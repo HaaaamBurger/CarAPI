@@ -35,5 +35,4 @@ public class UserService implements UserDetailsService {
         .findUserByEmail(username)
         .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist!!"));
     }
-    
 }
