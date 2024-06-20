@@ -23,8 +23,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final UserUtil userUtil;
-
     public List<UserDto> getAll() {
         List<User> users = userRepository.findAll();
 

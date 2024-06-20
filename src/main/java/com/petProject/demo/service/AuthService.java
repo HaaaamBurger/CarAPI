@@ -1,11 +1,10 @@
 package com.petProject.demo.service;
 
-import com.petProject.demo.common.type.Roles;
 import com.petProject.demo.common.util.AuthUtil;
 import com.petProject.demo.dto.AuthRequestDto;
-import com.petProject.demo.dto.AuthResponseDto;
 import com.petProject.demo.dto.TokenDto;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,15 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final JwtService jwtService;
+
     private final AuthUtil authUtil;
+
+    @Value("${jwt.access-token.ttl-millis}")
+    private String accessTokenMillis;
+
+    @Value("${jwt.refresh-token.ttl-millis}")
+    private String refreshTokenMillis;
 
     @Transactional
     public UserDto register(UserDto userDto) {
@@ -49,6 +56,12 @@ public class AuthService {
     }
 
     public TokenDto login(AuthRequestDto authRequestDto) {
+        User userDetails =
+
+        String accessToken = jwtService.generateToken();
+
+        String refreshToken;
+
         return TokenDto
                 .builder()
                 .build();
