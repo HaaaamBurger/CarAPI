@@ -20,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<UserResponseDto<List<UserDto>>> getAll(@RequestParam(value = "page", required = false) String page, @RequestParam(value = "size", required = false) String size) {
-        List<UserDto> users = userService.getAll(Integer.parseInt(page), Integer.parseInt(size));
+    public ResponseEntity<UserResponseDto<List<UserDto>>> getAll() {
+        List<UserDto> users = userService.getAll();
         return ResponseEntity
                 .ok()
                 .body(UserResponseDto.<List<UserDto>>builder()

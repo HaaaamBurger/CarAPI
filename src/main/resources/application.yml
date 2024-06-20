@@ -3,3 +3,11 @@ spring:
     mongodb:
       uri: mongodb+srv://haaaamburger:kunleM2004@spring.brq8w4l.mongodb.net/
       database: "carsDB"
+
+jwt:
+  secret: tUTZ8WnNpRzlEaYw2xyxDuIyRRzgiTUUXqSRoCZmcy6fJEU56nzO
+  access-token:
+    ttl-millis: 60000
+  refresh-token:
+    ttl-millis: 120000
+

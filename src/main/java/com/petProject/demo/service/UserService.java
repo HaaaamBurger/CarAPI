@@ -25,13 +25,8 @@ public class UserService implements UserDetailsService {
 
     private final UserUtil userUtil;
 
-    public List<UserDto> getAll(Integer page, Integer size) {
+    public List<UserDto> getAll() {
         List<User> users = userRepository.findAll();
-
-        if (page != null || size != null) {
-           List<User> paginatedUsers = userUtil.paginateList(page, size, users);
-           return paginatedUsers.stream().map(userMapper::toDto).toList();
-        }
 
         return users.stream().map(userMapper::toDto).toList();
     }

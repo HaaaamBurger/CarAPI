@@ -8,7 +8,5 @@ import lombok.Data;
 public class UserResponseDto<T> {
     private String message;
     private Long users;
-    private Integer page;
-    private Integer size;
     private T body;
 }

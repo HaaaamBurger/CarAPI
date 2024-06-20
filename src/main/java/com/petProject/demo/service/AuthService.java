@@ -2,6 +2,9 @@ package com.petProject.demo.service;
 
 import com.petProject.demo.common.type.Roles;
 import com.petProject.demo.common.util.AuthUtil;
+import com.petProject.demo.dto.AuthRequestDto;
+import com.petProject.demo.dto.AuthResponseDto;
+import com.petProject.demo.dto.TokenDto;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,5 +46,11 @@ public class AuthService {
         User savedUser = userRepository.save(userMapper.fromDto(userDto));
 
         return userMapper.toDto(savedUser);
+    }
+
+    public TokenDto login(AuthRequestDto authRequestDto) {
+        return TokenDto
+                .builder()
+                .build();
     }
 }
