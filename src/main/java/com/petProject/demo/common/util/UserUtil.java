@@ -16,9 +16,11 @@ public class UserUtil {
             size = 1;
         }
 
-        Integer firstUser = size * page + 1;
-        Integer lastUser = size * page + 1 + size;
+        Integer firstValue = page * size + 1;
+        Integer lastValue = firstValue + size;
 
-        return users.subList(firstUser, lastUser);
+
+        return users.subList(firstValue, lastValue);
     };
+
 }

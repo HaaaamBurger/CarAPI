@@ -1,6 +1,6 @@
 package com.petProject.demo.common.util;
 
-import com.petProject.demo.common.type.ERoles;
+import com.petProject.demo.common.type.Roles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,6 +19,6 @@ public class AuthUtil {
     }
 
     public boolean isValidRole(String role) {
-        return role.equals(String.valueOf(ERoles.BUYER)) || role.equals(String.valueOf(ERoles.SELLER));
+        return role.equals(String.valueOf(Roles.BUYER)) || role.equals(String.valueOf(Roles.SELLER));
     }
 }

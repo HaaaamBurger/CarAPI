@@ -1,6 +1,6 @@
 package com.petProject.demo.common.type;
 
-public enum ERoles {
+public enum Roles {
     ADMIN,
     MANAGER,
     BUYER,

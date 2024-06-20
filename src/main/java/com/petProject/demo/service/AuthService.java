@@ -1,6 +1,6 @@
 package com.petProject.demo.service;
 
-import com.petProject.demo.common.type.ERoles;
+import com.petProject.demo.common.type.Roles;
 import com.petProject.demo.common.util.AuthUtil;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import org.springframework.security.crypto.password.PasswordEncoder;

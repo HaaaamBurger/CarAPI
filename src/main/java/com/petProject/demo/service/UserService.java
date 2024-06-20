@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
 
         if (page != null || size != null) {
            List<User> paginatedUsers = userUtil.paginateList(page, size, users);
-           return users.stream().map(userMapper::toDto).toList();
+           return paginatedUsers.stream().map(userMapper::toDto).toList();
         }
 
         return users.stream().map(userMapper::toDto).toList();
