@@ -19,7 +19,6 @@ public class AuthController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<AuthResponseDto<UserDto>> register(@Valid @RequestBody UserDto userDto) {
-
         UserDto savedUserDto = authService.register(userDto);
 
         return ResponseEntity
@@ -33,15 +32,13 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public ResponseEntity<AuthResponseDto<TokenDto>> login(@RequestBody AuthRequestDto authRequestDto) {
-
+        TokenDto tokens = authService.login(authRequestDto);
         return ResponseEntity
                 .ok()
                 .body(
                         AuthResponseDto.<TokenDto>builder()
                                 .message("Successfully authenticated.")
-                                .body(TokenDto
-                                        .builder()
-                                        .build())
+                                .body(tokens)
                                 .build()
                 );
     }

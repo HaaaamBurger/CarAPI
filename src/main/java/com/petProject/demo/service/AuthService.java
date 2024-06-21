@@ -1,10 +1,13 @@
 package com.petProject.demo.service;
 
 import com.petProject.demo.common.util.AuthUtil;
+import com.petProject.demo.common.util.UserUtil;
 import com.petProject.demo.dto.AuthRequestDto;
 import com.petProject.demo.dto.TokenDto;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
+import com.petProject.demo.security.exception.WrongCredentialsException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,12 @@ import com.petProject.demo.security.exception.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.login.CredentialException;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    
+
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
@@ -30,17 +35,19 @@ public class AuthService {
     private final JwtService jwtService;
 
     private final AuthUtil authUtil;
+    private final UserUtil userUtil;
 
     @Value("${jwt.access-token.ttl-millis}")
-    private String accessTokenMillis;
+    private Long accessTokenMillis;
 
     @Value("${jwt.refresh-token.ttl-millis}")
-    private String refreshTokenMillis;
+    private Long refreshTokenMillis;
 
     @Transactional
     public UserDto register(UserDto userDto) {
         userRepository.findUserByEmail(userDto.getEmail()).ifPresent(user -> {
-            throw new UserAlreadyExistsException("User already exists!!");
+            throw new UserAlreadyExistsException("User already exists.");
+
         });
 
         if (!authUtil.isValidRole(userDto.getRole())) {
@@ -55,15 +62,23 @@ public class AuthService {
         return userMapper.toDto(savedUser);
     }
 
+
+    @Transactional
     public TokenDto login(AuthRequestDto authRequestDto) {
-        User userDetails =
+        return userRepository.findUserByEmail(authRequestDto.getEmail()).map(user -> {
+            if (!authUtil.isMatch(authRequestDto.getPassword(), user.getPassword())) {
+                throw new WrongCredentialsException("Wrong user credentials.");
+            }
 
-        String accessToken = jwtService.generateToken();
+            String accessToken = jwtService.generateToken(user, accessTokenMillis);
+            String refreshToken = jwtService.generateToken(user, refreshTokenMillis);
 
-        String refreshToken;
+            return TokenDto
+                    .builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
 
-        return TokenDto
-                .builder()
-                .build();
+        }).orElseThrow(() -> new WrongCredentialsException("Wrong user credentials."));
     }
 }

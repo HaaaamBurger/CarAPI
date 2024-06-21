@@ -21,4 +21,5 @@ public class AuthUtil {
     public boolean isValidRole(String role) {
         return role.equals(String.valueOf(Roles.BUYER)) || role.equals(String.valueOf(Roles.SELLER));
     }
+
 }
