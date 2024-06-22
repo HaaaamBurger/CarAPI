@@ -1,8 +1,6 @@
 package com.petProject.demo.service;
 
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -47,5 +46,19 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + tokenTimeMillis))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public <T> T extractFromToken(String token, Function<Claims, T> extractor) {
+        Claims claims = jwtParser.parseClaimsJws(token).getBody();
+        return extractor.apply(claims);
+    }
+
+    public String extractUsername(String token) {
+        return extractFromToken(token, Claims::getSubject);
+    }
+
+    public boolean isTokenValid(String token) throws ExpiredJwtException {
+        Date expiredAt = extractFromToken(token, Claims::getExpiration);
+        return expiredAt.after(new Date());
     }
 }
