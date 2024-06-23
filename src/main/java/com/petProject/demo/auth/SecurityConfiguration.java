@@ -32,8 +32,6 @@ public class SecurityConfiguration {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-    /*private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;*/
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -74,5 +72,5 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider())
                 .build();
     }
-    
+
 }

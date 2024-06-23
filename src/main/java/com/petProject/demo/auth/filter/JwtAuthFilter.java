@@ -2,7 +2,6 @@ package com.petProject.demo.auth.filter;
 
 import com.petProject.demo.service.JwtService;
 import com.petProject.demo.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String jwtValue = authorizationHeaderValue.substring(AUTHORIZATION_HEADER_PREFIX.length());
 
-        jwtService. isTokenValid(jwtValue);
+        jwtService.isTokenValid(jwtValue);
 
         String username = jwtService.extractUsername(jwtValue);
 

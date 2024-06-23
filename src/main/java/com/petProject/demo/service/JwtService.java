@@ -49,8 +49,7 @@ public class JwtService {
     }
 
     public <T> T extractFromToken(String token, Function<Claims, T> extractor) {
-
-        Claims claims =  jwtParser.parseClaimsJws(token).getBody();
+        Claims claims = jwtParser.parseClaimsJws(token).getBody();
         return extractor.apply(claims);
     }
 

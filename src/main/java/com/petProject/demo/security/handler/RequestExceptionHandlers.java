@@ -4,7 +4,6 @@ import com.petProject.demo.dto.ExceptionResponseDto;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import com.petProject.demo.security.exception.UserAlreadyExistsException;
 import com.petProject.demo.security.exception.WrongCredentialsException;
-import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
