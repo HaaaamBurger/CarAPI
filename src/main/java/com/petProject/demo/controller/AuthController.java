@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
-    
+
     private final AuthService authService;
 
     @PostMapping("/auth/register")
@@ -22,12 +22,12 @@ public class AuthController {
         UserDto savedUserDto = authService.register(userDto);
 
         return ResponseEntity
-            .ok()
-            .body(AuthResponseDto.<UserDto>builder()
-                .message("Successfully registered")
-                .body(savedUserDto) 
-                .build()
-            );
+                .ok()
+                .body(AuthResponseDto.<UserDto>builder()
+                        .message("Successfully registered.")
+                        .body(savedUserDto)
+                        .build()
+                );
     }
 
     @PostMapping("/auth/login")

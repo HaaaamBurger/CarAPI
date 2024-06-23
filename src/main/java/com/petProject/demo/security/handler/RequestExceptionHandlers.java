@@ -4,34 +4,38 @@ import com.petProject.demo.dto.ExceptionResponseDto;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import com.petProject.demo.security.exception.UserAlreadyExistsException;
 import com.petProject.demo.security.exception.WrongCredentialsException;
+import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
 
-@ControllerAdvice
-public class RequestExceptionHandlers {
+@RestControllerAdvice
+public class RequestExceptionHandlers extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ExceptionResponseDto> methodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         return ResponseEntity
                 .badRequest()
                 .body(ExceptionResponseDto
                         .builder()
                         .createdAt(new Date())
                         .status(HttpStatus.BAD_REQUEST)
-                        .message(exception.getBody().getDetail())
+                        .message(ex.getBody().getDetail())
                         .build()
                 );
     }
 
-
-    @ExceptionHandler({HttpMessageNotReadableException.class})
-    public ResponseEntity<ExceptionResponseDto> httpMessageNotReadableException(HttpMessageNotReadableException exception) {
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         return ResponseEntity
                 .badRequest()
                 .body(ExceptionResponseDto

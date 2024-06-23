@@ -49,7 +49,8 @@ public class JwtService {
     }
 
     public <T> T extractFromToken(String token, Function<Claims, T> extractor) {
-        Claims claims = jwtParser.parseClaimsJws(token).getBody();
+
+        Claims claims =  jwtParser.parseClaimsJws(token).getBody();
         return extractor.apply(claims);
     }
 
@@ -57,7 +58,7 @@ public class JwtService {
         return extractFromToken(token, Claims::getSubject);
     }
 
-    public boolean isTokenValid(String token) throws ExpiredJwtException {
+    public boolean isTokenValid(String token) {
         Date expiredAt = extractFromToken(token, Claims::getExpiration);
         return expiredAt.after(new Date());
     }
