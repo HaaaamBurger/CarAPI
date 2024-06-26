@@ -1,5 +1,6 @@
 package com.petProject.demo.auth.filter;
 
+import com.petProject.demo.security.exception.TokenExpiredException;
 import com.petProject.demo.service.JwtService;
 import com.petProject.demo.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -40,7 +41,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String jwtValue = authorizationHeaderValue.substring(AUTHORIZATION_HEADER_PREFIX.length());
 
-        jwtService.isTokenValid(jwtValue);
+        if(jwtService.isTokenValid(jwtValue)) {
+            throw new TokenExpiredException("Token expired");
+        }
 
         String username = jwtService.extractUsername(jwtValue);
 

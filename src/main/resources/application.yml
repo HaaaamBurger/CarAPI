@@ -10,4 +10,6 @@ jwt:
     ttl-millis: 60000
   refresh-token:
     ttl-millis: 120000
-
+springdoc:
+  api-docs:
+    path: "/api-docs"

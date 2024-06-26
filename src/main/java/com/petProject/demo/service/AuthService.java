@@ -6,6 +6,7 @@ import com.petProject.demo.dto.AuthRequestDto;
 import com.petProject.demo.dto.TokenDto;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import com.petProject.demo.security.exception.WrongCredentialsException;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -81,4 +82,22 @@ public class AuthService {
 
         }).orElseThrow(() -> new WrongCredentialsException("Wrong user credentials."));
     }
+
+////    public TokenDto refresh(String token) {
+////        jwtService.isTokenValid(token);
+////
+////        Claims tokenClaims = jwtService.extractAllClaims(token);
+////        String username = jwtService.extractUsername(token);
+////
+
+////        String accessToken = jwtService.reGenerateToken(tokenClaims, username, accessTokenMillis);
+////        String refreshToken = jwtService.reGenerateToken(tokenClaims, username, refreshTokenMillis);
+////
+////        return TokenDto
+////                .builder()
+////                .accessToken(accessToken)
+////                .refreshToken(refreshToken)
+////                .build();
+//
+//    }
 }

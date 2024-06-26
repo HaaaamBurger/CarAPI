@@ -2,9 +2,7 @@ package com.petProject.demo.controller;
 
 import com.petProject.demo.dto.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.petProject.demo.service.AuthService;
 
@@ -42,4 +40,17 @@ public class AuthController {
                                 .build()
                 );
     }
+
+//    @PostMapping("/auth/refresh")
+//    public ResponseEntity<AuthResponseDto<TokenDto>> refresh(@RequestHeader("Authorization") String token) {
+//        TokenDto tokens = authService.refresh(token);
+//
+//        return ResponseEntity
+//                .ok()
+//                .body(
+//                        AuthResponseDto.<TokenDto>builder()
+//                                .message("Tokens was successfully updated.")
+//                                .body(tokens)
+//                                .build()
+//                );
 }

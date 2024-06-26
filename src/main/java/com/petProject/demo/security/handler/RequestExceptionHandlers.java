@@ -1,6 +1,7 @@
 package com.petProject.demo.security.handler;
 
 import com.petProject.demo.dto.ExceptionResponseDto;
+import com.petProject.demo.security.exception.TokenExpiredException;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import com.petProject.demo.security.exception.UserAlreadyExistsException;
 import com.petProject.demo.security.exception.WrongCredentialsException;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -17,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Date;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class RequestExceptionHandlers extends ResponseEntityExceptionHandler {
 
     @Override
@@ -74,6 +76,19 @@ public class RequestExceptionHandlers extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({WrongCredentialsException.class})
     public ResponseEntity<ExceptionResponseDto> WrongCredentialsException(WrongCredentialsException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponseDto
+                        .builder()
+                        .createdAt(new Date())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(exception.getMessage())
+                        .build()
+                );
+    }
+
+    @ExceptionHandler({TokenExpiredException.class})
+    public ResponseEntity<ExceptionResponseDto> tokenExpiredException(TokenExpiredException exception) {
         return ResponseEntity
                 .badRequest()
                 .body(ExceptionResponseDto
