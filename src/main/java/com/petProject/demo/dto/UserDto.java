@@ -2,6 +2,7 @@ package com.petProject.demo.dto;
 
 import java.util.List;
 
+import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.model.Car;
 
 import jakarta.validation.constraints.NotBlank;
@@ -14,13 +15,12 @@ import lombok.Setter;
 @Getter
 @Builder
 public class UserDto {
-
-    private String id;
+    private String userId;
 
     @NotBlank
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
-    
+
     @NotBlank
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
     private String password;
@@ -29,4 +29,6 @@ public class UserDto {
 
     @NotBlank
     private String role;
+
+    private AccountTypes type;
 }

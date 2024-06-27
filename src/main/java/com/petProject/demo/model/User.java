@@ -3,6 +3,7 @@ package com.petProject.demo.model;
 import java.util.Collection;
 import java.util.List;
 
+import com.petProject.demo.common.type.AccountTypes;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -20,7 +21,7 @@ import lombok.Getter;
 @Document("USERS")
 public class User implements UserDetails {
     @MongoId
-    private String id;
+    private String userId;
 
     @NotBlank
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
@@ -34,6 +35,8 @@ public class User implements UserDetails {
     private List<Car> cars;
 
     private String role;
+
+    private AccountTypes type;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

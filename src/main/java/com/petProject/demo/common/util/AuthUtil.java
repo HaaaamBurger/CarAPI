@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AuthUtil {
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
+
     private final PasswordEncoder passwordEncoder;
 
     public String hashPassword(String password) {
@@ -16,6 +18,10 @@ public class AuthUtil {
 
     public boolean isMatch(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    public String substringToken(String token) {
+        return token.substring(AUTHORIZATION_HEADER_PREFIX.length());
     }
 
     public boolean isValidRole(String role) {

@@ -1,14 +1,14 @@
 package com.petProject.demo.service;
 
+import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.common.util.AuthUtil;
-import com.petProject.demo.common.util.UserUtil;
 import com.petProject.demo.dto.AuthRequestDto;
 import com.petProject.demo.dto.TokenDto;
+import com.petProject.demo.security.exception.TokenExpiredException;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
 import com.petProject.demo.security.exception.WrongCredentialsException;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,10 @@ import com.petProject.demo.common.mapper.UserMapper;
 import com.petProject.demo.dto.UserDto;
 import com.petProject.demo.model.User;
 import com.petProject.demo.repository.UserRepository;
-import com.petProject.demo.security.exception.UserAlreadyExistsException;
+import com.petProject.demo.security.exception.EntityAlreadyExistsException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.security.auth.login.CredentialException;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +34,6 @@ public class AuthService {
     private final JwtService jwtService;
 
     private final AuthUtil authUtil;
-    private final UserUtil userUtil;
 
     @Value("${jwt.access-token.ttl-millis}")
     private Long accessTokenMillis;
@@ -47,16 +44,17 @@ public class AuthService {
     @Transactional
     public UserDto register(UserDto userDto) {
         userRepository.findUserByEmail(userDto.getEmail()).ifPresent(user -> {
-            throw new UserAlreadyExistsException("User already exists.");
+            throw new EntityAlreadyExistsException("User already exists.");
 
         });
 
         if (!authUtil.isValidRole(userDto.getRole())) {
-            throw new UnexpectedUserRoleException("Unappropriate role.");
+            throw new UnexpectedUserRoleException("Unappropriated role.");
         }
 
         String hashedPassword = authUtil.hashPassword(userDto.getPassword());
         userDto.setPassword(hashedPassword);
+        userDto.setType(AccountTypes.BASE);
 
         User savedUser = userRepository.save(userMapper.fromDto(userDto));
 
@@ -83,21 +81,24 @@ public class AuthService {
         }).orElseThrow(() -> new WrongCredentialsException("Wrong user credentials."));
     }
 
-////    public TokenDto refresh(String token) {
-////        jwtService.isTokenValid(token);
-////
-////        Claims tokenClaims = jwtService.extractAllClaims(token);
-////        String username = jwtService.extractUsername(token);
-////
+    public TokenDto refresh(String token) {
 
-////        String accessToken = jwtService.reGenerateToken(tokenClaims, username, accessTokenMillis);
-////        String refreshToken = jwtService.reGenerateToken(tokenClaims, username, refreshTokenMillis);
-////
-////        return TokenDto
-////                .builder()
-////                .accessToken(accessToken)
-////                .refreshToken(refreshToken)
-////                .build();
-//
-//    }
+        String convertedToken = authUtil.substringToken(token);
+
+        if (jwtService.isTokenValid(convertedToken)) {
+            throw new TokenExpiredException("Token expired");
+        }
+
+        Claims tokenClaims = jwtService.extractAllClaims(convertedToken);
+        String username = jwtService.extractUsername(convertedToken);
+        String accessToken = jwtService.generateTokenByRefresh(tokenClaims, username, accessTokenMillis);
+        String refreshToken = jwtService.generateTokenByRefresh(tokenClaims, username, refreshTokenMillis);
+
+        return TokenDto
+                .builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+    }
 }

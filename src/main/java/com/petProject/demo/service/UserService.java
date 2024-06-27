@@ -33,6 +33,6 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         return userRepository
         .findUserByEmail(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist!!"));
+        .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist."));
     }
 }

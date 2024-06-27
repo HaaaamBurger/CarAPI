@@ -10,22 +10,24 @@ public class UserMapper {
     public UserDto toDto(User user) {
         return UserDto
                 .builder()
-                .id(user.getId())
+                .userId(user.getUserId())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
                 .cars(user.getCars())
+                .type(user.getType())
                 .build();
     }
 
     public User fromDto(UserDto userDto) {
         return User
                 .builder()
-                .id(userDto.getId())
+                .userId(userDto.getUserId())
                 .email(userDto.getEmail())
                 .password(userDto.getPassword())
                 .role(userDto.getRole())
                 .cars(userDto.getCars())
+                .type(userDto.getType())
                 .build();
     }
 }

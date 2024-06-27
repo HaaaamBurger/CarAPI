@@ -2,6 +2,7 @@ package com.petProject.demo.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.petProject.demo.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -54,16 +55,16 @@ public class JwtService {
                 .compact();
     }
 
-//    public String reGenerateToken(Claims claims, String username, long tokenTimeMillis) {
-//        return Jwts
-//                .builder()
-//                .setSubject(username)
-//                .setClaims(claims)
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + tokenTimeMillis))
-//                .signWith(key ,SignatureAlgorithm.HS256)
-//                .compact();
-//    }
+    public String generateTokenByRefresh(Claims claims, String username, long tokenTimeMillis) {
+        return Jwts
+                .builder()
+                .setSubject(username)
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenTimeMillis))
+                .signWith(key ,SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     public <T> T extractFromToken(String token, Function<Claims, T> extractor) {
         Claims claims = jwtParser.parseClaimsJws(token).getBody();
@@ -71,14 +72,12 @@ public class JwtService {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(tokenSecret).parseClaimsJws(token).getBody();
+        return Jwts
+                .parser()
+                .setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(token)
+                .getBody();
     }
-
-//    public String refreshToken(String token, long tokenTimeMillis) {
-//        final Claims claims = extractAllClaims(token);
-//        claims.setIssuedAt(new Date());
-//        return reGenerateToken(claims, extractUsername(token), tokenTimeMillis);
-//    }
 
     public String extractUsername(String token) {
         return extractFromToken(token, Claims::getSubject);
@@ -89,8 +88,5 @@ public class JwtService {
         Date expiresAt = decodedJWT.getExpiresAt();
 
         return expiresAt.before(new Date());
-
-//        Date expiredAt = extractFromToken(token, Claims::getExpiration);
-//        return expiredAt.after(new Date());
     }
 }

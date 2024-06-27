@@ -41,16 +41,16 @@ public class AuthController {
                 );
     }
 
-//    @PostMapping("/auth/refresh")
-//    public ResponseEntity<AuthResponseDto<TokenDto>> refresh(@RequestHeader("Authorization") String token) {
-//        TokenDto tokens = authService.refresh(token);
-//
-//        return ResponseEntity
-//                .ok()
-//                .body(
-//                        AuthResponseDto.<TokenDto>builder()
-//                                .message("Tokens was successfully updated.")
-//                                .body(tokens)
-//                                .build()
-//                );
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<AuthResponseDto<TokenDto>> refresh(@RequestHeader("Authorization") String token) {
+        TokenDto tokens = authService.refresh(token);
+        return ResponseEntity
+                .ok()
+                .body(
+                        AuthResponseDto.<TokenDto>builder()
+                                .message("Tokens was successfully updated.")
+                                .body(tokens)
+                                .build()
+                );
+    }
 }

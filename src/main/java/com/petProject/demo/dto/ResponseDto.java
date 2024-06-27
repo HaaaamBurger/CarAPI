@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserResponseDto<T> {
+public class ResponseDto<T> {
     private String message;
-    private Long users;
+    private Long count;
     private T body;
 }

@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                 .csrf(CsrfConfigurer::disable)
                 .cors(CorsConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/register", "/auth/login", "/auth/refresh", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(basic -> basic.authenticationEntryPoint(customAuthenticationEntryPoint))

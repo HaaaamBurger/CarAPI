@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.petProject.demo.dto.UserDto;
-import com.petProject.demo.dto.UserResponseDto;
+import com.petProject.demo.dto.ResponseDto;
 import com.petProject.demo.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,13 +19,13 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<UserResponseDto<List<UserDto>>> getAll() {
+    public ResponseEntity<ResponseDto<List<UserDto>>> getAll() {
         List<UserDto> users = userService.getAll();
         return ResponseEntity
                 .ok()
-                .body(UserResponseDto.<List<UserDto>>builder()
+                .body(ResponseDto.<List<UserDto>>builder()
                         .message("List of users")
-                        .users((long) users.size())
+                        .count((long) users.size())
                         .body(users)
                         .build()
                 );
