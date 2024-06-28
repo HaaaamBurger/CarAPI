@@ -29,6 +29,6 @@ public class Car {
     @NotBlank
     private String city;
 
-    @DBRef
-    private User owner;
+//    @DBRef
+    private String owner;
 }

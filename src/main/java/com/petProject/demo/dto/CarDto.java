@@ -1,9 +1,10 @@
 package com.petProject.demo.dto;
 
-import com.petProject.demo.model.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Builder
 public class CarDto {
@@ -17,5 +18,5 @@ public class CarDto {
 
     private String city;
 
-    private User owner;
+    private String owner;
 }

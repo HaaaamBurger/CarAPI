@@ -1,10 +1,7 @@
 package com.petProject.demo.security.handler;
 
 import com.petProject.demo.dto.ExceptionResponseDto;
-import com.petProject.demo.security.exception.TokenExpiredException;
-import com.petProject.demo.security.exception.UnexpectedUserRoleException;
-import com.petProject.demo.security.exception.EntityAlreadyExistsException;
-import com.petProject.demo.security.exception.WrongCredentialsException;
+import com.petProject.demo.security.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -88,6 +85,19 @@ public class RequestExceptionHandlers extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({TokenExpiredException.class})
     public ResponseEntity<ExceptionResponseDto> tokenExpiredException(TokenExpiredException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponseDto
+                        .builder()
+                        .createdAt(new Date())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(exception.getMessage())
+                        .build()
+                );
+    }
+
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<ExceptionResponseDto> notFoundException(NotFoundException exception) {
         return ResponseEntity
                 .badRequest()
                 .body(ExceptionResponseDto

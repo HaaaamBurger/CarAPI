@@ -31,7 +31,6 @@ public class User implements UserDetails {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)[a-zA-Z\\\\d]{8,12}$")
     private String password;
 
-    @DBRef
     private List<Car> cars;
 
     private String role;

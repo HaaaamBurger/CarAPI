@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://haaaamburger:kunleM2004@spring.2laiaci.mongodb.net/
+      uri: mongodb+srv://haaaamburger:kunleM2004@spring.1eo6vra.mongodb.net/?retryWrites=true&w=majority&appName=spring
       database: "carsDB"
 
 jwt:
