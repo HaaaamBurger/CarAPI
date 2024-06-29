@@ -4,6 +4,7 @@ import com.petProject.demo.dto.CarDto;
 import com.petProject.demo.dto.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserSchema {
     UserDto save(UserDto userDto);

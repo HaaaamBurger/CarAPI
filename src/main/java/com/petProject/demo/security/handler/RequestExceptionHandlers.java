@@ -108,4 +108,17 @@ public class RequestExceptionHandlers extends ResponseEntityExceptionHandler {
                         .build()
                 );
     }
+
+    @ExceptionHandler({UnexpectedValueException.class})
+    public ResponseEntity<ExceptionResponseDto> unexpectedValueException(UnexpectedValueException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponseDto
+                        .builder()
+                        .createdAt(new Date())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(exception.getMessage())
+                        .build()
+                );
+    }
 }

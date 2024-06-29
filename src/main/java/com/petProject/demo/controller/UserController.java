@@ -36,23 +36,31 @@ public class UserController {
     }
 
     @PostMapping()
-    public UserDto save(UserDto userDto) {
-
-        return null;
+    public ResponseEntity<ResponseDto<UserDto>> save(@RequestBody UserDto userDto) {
+        UserDto storedUser = userService.save(userDto);
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto.<UserDto>builder()
+                        .count(1L)
+                        .message("User was successfully stored.")
+                        .body(storedUser)
+                        .build()
+                );
     }
 
     @GetMapping("/{userId}")
-    public UserDto getByUserId(@PathVariable Long userId) {
+    public UserDto getByUserId(@PathVariable String userId) {
+        UserDto storedUserById = userService.getByCarId(userId);
         return null;
     }
 
     @DeleteMapping("/{userId}")
-    public UserDto removeByUserId(Long userId) {
+    public UserDto removeByUserId(String userId) {
         return null;
     }
 
     @PutMapping("/{userId}")
-    public UserDto updateByUserId(Long userId, UserDto userDto) {
+    public UserDto updateByUserId(String userId, UserDto userDto) {
         return null;
     }
 }

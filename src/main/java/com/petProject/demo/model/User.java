@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.petProject.demo.common.type.AccountTypes;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -16,6 +17,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 
+@Setter
 @Getter
 @Builder
 @Document("USERS")

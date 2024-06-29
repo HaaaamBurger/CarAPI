@@ -2,11 +2,13 @@ package com.petProject.demo.service;
 
 import java.util.List;
 
+import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.common.type.UserSchema;
-import com.petProject.demo.common.util.UserUtil;
-import com.petProject.demo.model.Car;
+import com.petProject.demo.common.util.AuthUtil;
 import com.petProject.demo.security.exception.EntityAlreadyExistsException;
 import com.petProject.demo.security.exception.NotFoundException;
+import com.petProject.demo.security.exception.UnexpectedUserRoleException;
+import com.petProject.demo.security.exception.UnexpectedValueException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,35 +30,61 @@ public class UserService implements UserDetailsService, UserSchema {
 
     private final UserRepository userRepository;
 
+    private final AuthUtil authUtil;
+
     @Transactional
     @Override
     public UserDto save(UserDto userDto) {
-        checkUserForExistenceAndThrowNotFound(userDto.getUserId());
-        userRepository.save(userMapper.fromDto(userDto));
+        userRepository.findUserByEmail(userDto.getEmail()).ifPresent(user -> {
+            throw new EntityAlreadyExistsException("User already exists.");
+        });
 
-        return null;
+        if (!authUtil.isValidRole(userDto.getRole())) {
+            throw new UnexpectedUserRoleException("Unappropriated role.");
+        }
+
+        String hashedPassword = authUtil.hashPassword(userDto.getPassword());
+        userDto.setPassword(hashedPassword);
+        userDto.setType((userDto.getType()));
+
+        User savedUser = userRepository.save(userMapper.fromDto(userDto));
+
+        return userMapper.toDto(savedUser);
     }
 
     @Override
     public List<UserDto> getAll() {
         List<User> users = userRepository.findAll();
-
         return users.stream().map(userMapper::toDto).toList();
     }
 
     @Override
     public UserDto getByCarId(String carId) {
-        return null;
+        User storedUser = checkUserForExistenceAndThrowNotFound(carId);
+        return userMapper.toDto(storedUser);
     }
 
     @Override
     public UserDto removeByCarId(String carId) {
-        return null;
+        User storedUser = checkUserForExistenceAndThrowNotFound(carId);
+        userRepository.delete(storedUser);
+
+        return userMapper.toDto(storedUser);
     }
 
     @Override
     public UserDto updateByCarId(String carId, UserDto userDto) {
-        return null;
+        User storedUser = checkUserForExistenceAndThrowNotFound(carId);
+        if (!userDto.getCars().isEmpty()) storedUser.setCars(userDto.getCars());
+        if (userDto.getType() != null) storedUser.setType(userDto.getType());
+        if (userDto.getRole() != null) storedUser.setUserId(userDto.getRole());
+        if (userDto.getEmail() != null) storedUser.setEmail(userDto.getEmail());
+        if (userDto.getPassword() != null) {
+            String hashedPassword = authUtil.hashPassword(userDto.getPassword());
+            storedUser.setPassword(hashedPassword);
+        };
+
+        return userMapper.toDto(storedUser);
     }
 
     @Override
