@@ -2,7 +2,6 @@ package com.petProject.demo.auth.filter;
 
 import com.petProject.demo.security.exception.TokenExpiredException;
 import com.petProject.demo.service.JwtService;
-import com.petProject.demo.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,7 +28,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    private final UserService userService;
+//    private final UserDetailsService userDetailsService;
 
 
     @Override
@@ -49,12 +49,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = jwtService.extractUsername(jwtValue);
 
         if (!username.isBlank()) {
-            UserDetails userDetails = userService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = UsernamePasswordAuthenticationToken.authenticated(username, userDetails.getPassword(), userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//            UsernamePasswordAuthenticationToken authentication = UsernamePasswordAuthenticationToken.authenticated(username, userDetails.getPassword(), userDetails.getAuthorities());
+//            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
-            emptyContext.setAuthentication(authentication);
+//            emptyContext.setAuthentication(authentication);
             SecurityContextHolder.setContext(emptyContext);
         }
 
