@@ -2,16 +2,15 @@ package com.petProject.demo.service;
 
 import java.util.List;
 
-import com.petProject.demo.common.type.AccountTypes;
+import com.petProject.demo.common.type.Roles;
 import com.petProject.demo.common.type.UserSchema;
-import com.petProject.demo.common.util.AuthUtil;
 import com.petProject.demo.security.exception.EntityAlreadyExistsException;
 import com.petProject.demo.security.exception.NotFoundException;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
-import com.petProject.demo.security.exception.UnexpectedValueException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.petProject.demo.common.mapper.UserMapper;
@@ -28,9 +27,9 @@ public class UserService implements UserDetailsService, UserSchema {
 
     private final UserMapper userMapper;
 
-    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    private final AuthUtil authUtil;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
@@ -39,11 +38,11 @@ public class UserService implements UserDetailsService, UserSchema {
             throw new EntityAlreadyExistsException("User already exists.");
         });
 
-        if (!authUtil.isValidRole(userDto.getRole())) {
+        if (!userDto.getRole().equals(String.valueOf(Roles.BUYER)) || userDto.getRole().equals(String.valueOf(Roles.SELLER))) {
             throw new UnexpectedUserRoleException("Unappropriated role.");
         }
 
-        String hashedPassword = authUtil.hashPassword(userDto.getPassword());
+        String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(hashedPassword);
         userDto.setType((userDto.getType()));
 
@@ -80,9 +79,10 @@ public class UserService implements UserDetailsService, UserSchema {
         if (userDto.getRole() != null) storedUser.setUserId(userDto.getRole());
         if (userDto.getEmail() != null) storedUser.setEmail(userDto.getEmail());
         if (userDto.getPassword() != null) {
-            String hashedPassword = authUtil.hashPassword(userDto.getPassword());
+            String hashedPassword = passwordEncoder.encode(userDto.getPassword());
             storedUser.setPassword(hashedPassword);
-        };
+        }
+        ;
 
         return userMapper.toDto(storedUser);
     }
@@ -98,3 +98,4 @@ public class UserService implements UserDetailsService, UserSchema {
         return userRepository.findUserByUserId(userId).orElseThrow(() -> new NotFoundException("User doesn't exist."));
     }
 }
+

@@ -1,7 +1,7 @@
 package com.petProject.demo.service;
 
 import com.petProject.demo.common.type.AccountTypes;
-import com.petProject.demo.common.util.AuthUtil;
+import com.petProject.demo.common.type.Roles;
 import com.petProject.demo.dto.AuthRequestDto;
 import com.petProject.demo.dto.TokenDto;
 import com.petProject.demo.security.exception.TokenExpiredException;
@@ -33,7 +33,7 @@ public class AuthService {
 
     private final JwtService jwtService;
 
-    private final AuthUtil authUtil;
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
 
     @Value("${jwt.access-token.ttl-millis}")
     private Long accessTokenMillis;
@@ -48,11 +48,11 @@ public class AuthService {
 
         });
 
-        if (!authUtil.isValidRole(userDto.getRole())) {
+        if (!userDto.getRole().equals(String.valueOf(Roles.BUYER)) || userDto.getRole().equals(String.valueOf(Roles.SELLER))) {
             throw new UnexpectedUserRoleException("Unappropriated role.");
         }
 
-        String hashedPassword = authUtil.hashPassword(userDto.getPassword());
+        String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(hashedPassword);
         userDto.setType(AccountTypes.BASE);
 
@@ -65,7 +65,7 @@ public class AuthService {
     @Transactional
     public TokenDto login(AuthRequestDto authRequestDto) {
         return userRepository.findUserByEmail(authRequestDto.getEmail()).map(user -> {
-            if (!authUtil.isMatch(authRequestDto.getPassword(), user.getPassword())) {
+            if (!passwordEncoder.matches(authRequestDto.getPassword(), user.getPassword())) {
                 throw new WrongCredentialsException("Wrong user credentials.");
             }
 
@@ -83,7 +83,7 @@ public class AuthService {
 
     public TokenDto refresh(String token) {
 
-        String convertedToken = authUtil.substringToken(token);
+        String convertedToken = token.substring(AUTHORIZATION_HEADER_PREFIX.length());
 
         if (jwtService.isTokenValid(convertedToken)) {
             throw new TokenExpiredException("Token expired");
