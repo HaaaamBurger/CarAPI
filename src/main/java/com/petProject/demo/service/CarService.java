@@ -21,13 +21,13 @@ public class CarService implements CarSchema {
 
     private final CarMapper carMapper;
 
-    private final UserService userService;
+    private final CustomUserService customUserService;
 
     @Transactional
     @Override
     public CarDto save(CarDto carDto) {
         SecurityContext context = SecurityContextHolder.getContext();
-        String username = userService
+        String username = customUserService
                 .loadUserByUsername(
                         context
                                 .getAuthentication()

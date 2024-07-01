@@ -48,7 +48,7 @@ public class AuthService {
 
         });
 
-        if (!userDto.getRole().equals(String.valueOf(Roles.BUYER)) || userDto.getRole().equals(String.valueOf(Roles.SELLER))) {
+        if (!userDto.getRole().equals(String.valueOf(Roles.valueOf(userDto.getRole())))) {
             throw new UnexpectedUserRoleException("Unappropriated role.");
         }
 

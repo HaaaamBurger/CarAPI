@@ -1,9 +1,10 @@
 package com.petProject.demo.auth.config;
 
+import com.petProject.demo.auth.AuthUtil;
 import com.petProject.demo.auth.filter.JwtAuthFilter;
 import com.petProject.demo.auth.handler.CustomAccessDeniedHandler;
 import com.petProject.demo.auth.handler.CustomAuthenticationEntryPoint;
-import com.petProject.demo.service.UserService;
+import com.petProject.demo.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +19,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -29,25 +28,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final UserDetailsService userDetailsService;
+    private final CustomUserService customUserService;
 
-//    private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
 
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final AuthUtil authUtil;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(customUserService);
+        provider.setPasswordEncoder(authUtil.passwordEncoder());
 
         return provider;
     }
@@ -74,7 +70,7 @@ public class SecurityConfiguration {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

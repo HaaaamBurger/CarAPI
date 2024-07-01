@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CarRepository extends MongoRepository<Car, String> {
     Optional<Car> findCarByCarId(String carId);
-    Optional<Car> removeCarByCarId(String carId);
+    void removeCarByCarId(String carId);
 }

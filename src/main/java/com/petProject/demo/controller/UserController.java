@@ -2,16 +2,12 @@ package com.petProject.demo.controller;
 
 import java.util.List;
 
-import com.petProject.demo.common.type.Roles;
-import com.petProject.demo.model.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.petProject.demo.dto.UserDto;
 import com.petProject.demo.dto.ResponseDto;
-import com.petProject.demo.service.UserService;
+import com.petProject.demo.service.CustomUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final CustomUserService customUserService;
 
     @GetMapping()
     public ResponseEntity<ResponseDto<List<UserDto>>> getAll() {
-        List<UserDto> users = userService.getAll();
+        List<UserDto> users = customUserService.getAll();
         return ResponseEntity
                 .ok()
                 .body(ResponseDto.<List<UserDto>>builder()
@@ -37,7 +33,7 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<ResponseDto<UserDto>> save(@RequestBody UserDto userDto) {
-        UserDto storedUser = userService.save(userDto);
+        UserDto storedUser = customUserService.save(userDto);
         return ResponseEntity
                 .ok()
                 .body(ResponseDto.<UserDto>builder()
@@ -49,18 +45,45 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getByUserId(@PathVariable String userId) {
-        UserDto storedUserById = userService.getByCarId(userId);
-        return null;
+    public ResponseEntity<ResponseDto<UserDto>> getByUserId(@PathVariable String userId) {
+        UserDto userById = customUserService.getByCarId(userId);
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .<UserDto>builder()
+                        .message("Here is your user by ID: %s".formatted(userId))
+                        .count(1L)
+                        .body(userById)
+                        .build());
     }
 
     @DeleteMapping("/{userId}")
-    public UserDto removeByUserId(String userId) {
-        return null;
+    public ResponseEntity<ResponseDto<UserDto>> removeByUserId(String userId) {
+        UserDto removedUserById = customUserService.removeByCarId(userId);
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .<UserDto>builder()
+                        .message("Removed car by ID: %s".formatted(userId))
+                        .count(1L)
+                        .body(removedUserById)
+                        .build());
+
     }
 
     @PutMapping("/{userId}")
-    public UserDto updateByUserId(String userId, UserDto userDto) {
-        return null;
+    public ResponseEntity<ResponseDto<UserDto>> updateByUserId(@PathVariable String userId, @RequestBody UserDto userDto) {
+        UserDto updatedCarById = customUserService.updateByCarId(userId, userDto);
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .<UserDto>builder()
+                        .message("Removed car by ID: %s".formatted(userId))
+                        .count(1L)
+                        .body(updatedCarById)
+                        .build());
     }
 }

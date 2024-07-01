@@ -5,6 +5,7 @@ import com.petProject.demo.dto.ResponseDto;
 import com.petProject.demo.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CarController {
     private final CarService carService;
 
+    @Secured({"SELLER", "ADMIN"})
     @PostMapping()
     public ResponseEntity<ResponseDto<CarDto>> save(@RequestBody CarDto carDto) {
         CarDto savedCarDto = carService.save(carDto);
@@ -30,6 +32,8 @@ public class CarController {
                 );
     }
 
+
+
     @GetMapping()
     public ResponseEntity<ResponseDto<List<CarDto>>> getAll() {
         List<CarDto> carsDto = carService.getAll();
@@ -43,5 +47,51 @@ public class CarController {
                         .body(carsDto)
                         .build()
                 );
+    }
+
+
+    @GetMapping("/{carId}")
+    public ResponseEntity<ResponseDto<CarDto>> getByCarId(@PathVariable String carId) {
+        CarDto carById = carService.getByCarId(carId);
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .<CarDto>builder()
+                        .count(1L)
+                        .message("Here is your car by ID: %s".formatted(carId))
+                        .body(carById)
+                        .build());
+    }
+
+
+    @Secured({"SELLER", "ADMIN"})
+    @DeleteMapping("/{carId}")
+    public ResponseEntity<ResponseDto<CarDto>> removeByCarId(@PathVariable String carId) {
+        CarDto removedCarById = carService.removeByCarId(carId);
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .<CarDto>builder()
+                        .count(1L)
+                        .message("Removed car by ID: %s".formatted(carId))
+                        .body(removedCarById)
+                        .build());
+    }
+
+    @Secured({"SELLER", "ADMIN"})
+    @PutMapping("/{carId}")
+    public ResponseEntity<ResponseDto<CarDto>> updateByCarId(@PathVariable String carId, @RequestBody CarDto carDto) {
+        CarDto updatedCarById = carService.updateByCarId(carId, carDto);
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .<CarDto>builder()
+                        .count(1L)
+                        .message("Updated car by ID: %s".formatted(carId))
+                        .body(updatedCarById)
+                        .build());
     }
 }
