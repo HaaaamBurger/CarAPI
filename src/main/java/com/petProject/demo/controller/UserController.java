@@ -3,6 +3,7 @@ package com.petProject.demo.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import com.petProject.demo.dto.UserDto;
@@ -18,6 +19,7 @@ public class UserController {
 
     private final CustomUserService customUserService;
 
+    @Secured("ADMIN")
     @GetMapping()
     public ResponseEntity<ResponseDto<List<UserDto>>> getAll() {
         List<UserDto> users = customUserService.getAll();
@@ -31,6 +33,7 @@ public class UserController {
                 );
     }
 
+    @Secured("ADMIN")
     @PostMapping()
     public ResponseEntity<ResponseDto<UserDto>> save(@RequestBody UserDto userDto) {
         UserDto storedUser = customUserService.save(userDto);
@@ -44,6 +47,7 @@ public class UserController {
                 );
     }
 
+    @Secured("ADMIN")
     @GetMapping("/{userId}")
     public ResponseEntity<ResponseDto<UserDto>> getByUserId(@PathVariable String userId) {
         UserDto userById = customUserService.getByCarId(userId);
@@ -58,6 +62,7 @@ public class UserController {
                         .build());
     }
 
+    @Secured("ADMIN")
     @DeleteMapping("/{userId}")
     public ResponseEntity<ResponseDto<UserDto>> removeByUserId(String userId) {
         UserDto removedUserById = customUserService.removeByCarId(userId);
@@ -73,6 +78,7 @@ public class UserController {
 
     }
 
+    @Secured("ADMIN")
     @PutMapping("/{userId}")
     public ResponseEntity<ResponseDto<UserDto>> updateByUserId(@PathVariable String userId, @RequestBody UserDto userDto) {
         UserDto updatedCarById = customUserService.updateByCarId(userId, userDto);

@@ -1,4 +1,4 @@
-package com.petProject.demo.auth;
+package com.petProject.demo.auth.util;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

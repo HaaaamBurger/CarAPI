@@ -2,7 +2,7 @@ package com.petProject.demo.service;
 
 import java.util.List;
 
-import com.petProject.demo.auth.AuthUtil;
+import com.petProject.demo.auth.util.AuthUtil;
 import com.petProject.demo.common.type.Roles;
 import com.petProject.demo.security.exception.EntityAlreadyExistsException;
 import com.petProject.demo.security.exception.NotFoundException;

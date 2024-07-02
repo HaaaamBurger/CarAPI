@@ -1,6 +1,6 @@
 package com.petProject.demo.auth.config;
 
-import com.petProject.demo.auth.AuthUtil;
+import com.petProject.demo.auth.util.AuthUtil;
 import com.petProject.demo.auth.filter.JwtAuthFilter;
 import com.petProject.demo.auth.handler.CustomAccessDeniedHandler;
 import com.petProject.demo.auth.handler.CustomAuthenticationEntryPoint;

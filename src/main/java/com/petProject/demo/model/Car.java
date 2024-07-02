@@ -1,5 +1,6 @@
 package com.petProject.demo.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -20,7 +21,7 @@ public class Car {
     @NotBlank
     private String producer;
 
-    @NotBlank
+    @NotNull
     private Short year;
     
     @NotBlank
@@ -29,6 +30,5 @@ public class Car {
     @NotBlank
     private String city;
 
-//    @DBRef
     private String owner;
 }

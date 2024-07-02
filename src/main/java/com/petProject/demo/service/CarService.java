@@ -1,9 +1,11 @@
 package com.petProject.demo.service;
 
+import com.petProject.demo.api.Private24ApiService;
 import com.petProject.demo.common.mapper.CarMapper;
 import com.petProject.demo.common.type.CarSchema;
 import com.petProject.demo.dto.CarDto;
 import com.petProject.demo.model.Car;
+import com.petProject.demo.model.Currency;
 import com.petProject.demo.repository.CarRepository;
 import com.petProject.demo.security.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarService implements CarSchema {
     private final CarRepository carRepository;
+
+    private final Private24ApiService private24ApiService;
 
     private final CarMapper carMapper;
 
@@ -43,6 +47,8 @@ public class CarService implements CarSchema {
 
     @Override
     public List<CarDto> getAll() {
+        List<Currency> currencies = private24ApiService.getCurrencies();
+
         return carRepository.findAll().stream().map(carMapper::toDto).toList();
     }
 
