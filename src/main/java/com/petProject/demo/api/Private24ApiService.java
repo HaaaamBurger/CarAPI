@@ -14,6 +14,7 @@ public class Private24ApiService {
     public List<Currency> getCurrencies() {
         RestTemplate restTemplate = new RestTemplate();
         Currency[] currencies = restTemplate.getForObject(uri, Currency[].class);
+
         return Arrays.asList(currencies);
     }
 }

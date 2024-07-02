@@ -15,8 +15,6 @@ import java.util.Date;
 @Builder
 @Document("CURRENCIES")
 public class Currency {
-//    private Date updatedAt;
-
     private String ccy;
 
     private String baseCcy;
