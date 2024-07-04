@@ -1,11 +1,8 @@
 package com.petProject.demo.model;
 
-import com.petProject.demo.common.type.Currencies;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Date;
 
@@ -15,12 +12,16 @@ import java.util.Date;
 @Builder
 @Document("CURRENCIES")
 public class Currency {
+    @MongoId
+    private String currencyId;
+
+    private Date updatedAt;
+
     private String ccy;
 
-    private String baseCcy;
+    private String base_ccy;
 
     private String buy;
 
     private String sale;
-
 }
