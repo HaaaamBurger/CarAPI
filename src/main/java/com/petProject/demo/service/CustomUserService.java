@@ -1,9 +1,11 @@
 package com.petProject.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.petProject.demo.auth.util.AuthUtil;
 import com.petProject.demo.common.type.Roles;
+import com.petProject.demo.repository.CarRepository;
 import com.petProject.demo.security.exception.EntityAlreadyExistsException;
 import com.petProject.demo.security.exception.NotFoundException;
 import com.petProject.demo.security.exception.UnexpectedUserRoleException;
@@ -27,6 +29,8 @@ public class CustomUserService implements UserDetailsService {
     private final UserMapper userMapper;
 
     private final AuthUtil authUtil;
+
+    private final CarRepository carRepository;
 
     private final UserRepository userRepository;
 
@@ -54,19 +58,23 @@ public class CustomUserService implements UserDetailsService {
         return users.stream().map(userMapper::toDto).toList();
     }
 
-    public UserDto getByCarId(String carId) {
+    public UserDto getByUserId(String carId) {
         User storedUser = checkUserForExistenceAndThrowNotFound(carId);
         return userMapper.toDto(storedUser);
     }
 
-    public UserDto removeByCarId(String carId) {
+    public UserDto removeByUserId(String carId) {
         User storedUser = checkUserForExistenceAndThrowNotFound(carId);
         userRepository.delete(storedUser);
 
         return userMapper.toDto(storedUser);
     }
 
-    public UserDto updateByCarId(String carId, UserDto userDto) {
+    public UserDto getUserByEmail(String email) {
+        return userMapper.toDto(userRepository.findUserByEmail(email).get());
+    }
+
+    public UserDto updateByUserId(String carId, UserDto userDto) {
         User storedUser = checkUserForExistenceAndThrowNotFound(carId);
         if (!userDto.getCars().isEmpty()) storedUser.setCars(userDto.getCars());
         if (userDto.getType() != null) storedUser.setType(userDto.getType());

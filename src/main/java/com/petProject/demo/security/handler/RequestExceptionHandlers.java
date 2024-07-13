@@ -121,4 +121,17 @@ public class RequestExceptionHandlers extends ResponseEntityExceptionHandler {
                         .build()
                 );
     }
+
+    @ExceptionHandler({PermissionNotAllowedException.class})
+    public ResponseEntity<ExceptionResponseDto> permissionNotAllowedException(PermissionNotAllowedException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponseDto
+                        .builder()
+                        .createdAt(new Date())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(exception.getMessage())
+                        .build()
+                );
+    }
 }

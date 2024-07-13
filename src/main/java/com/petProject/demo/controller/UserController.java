@@ -50,7 +50,7 @@ public class UserController {
     @Secured("ADMIN")
     @GetMapping("/{userId}")
     public ResponseEntity<ResponseDto<UserDto>> getByUserId(@PathVariable String userId) {
-        UserDto userById = customUserService.getByCarId(userId);
+        UserDto userById = customUserService.getByUserId(userId);
 
         return ResponseEntity
                 .ok()
@@ -65,7 +65,7 @@ public class UserController {
     @Secured("ADMIN")
     @DeleteMapping("/{userId}")
     public ResponseEntity<ResponseDto<UserDto>> removeByUserId(String userId) {
-        UserDto removedUserById = customUserService.removeByCarId(userId);
+        UserDto removedUserById = customUserService.removeByUserId(userId);
 
         return ResponseEntity
                 .ok()
@@ -81,7 +81,7 @@ public class UserController {
     @Secured("ADMIN")
     @PutMapping("/{userId}")
     public ResponseEntity<ResponseDto<UserDto>> updateByUserId(@PathVariable String userId, @RequestBody UserDto userDto) {
-        UserDto updatedCarById = customUserService.updateByCarId(userId, userDto);
+        UserDto updatedCarById = customUserService.updateByUserId(userId, userDto);
 
         return ResponseEntity
                 .ok()

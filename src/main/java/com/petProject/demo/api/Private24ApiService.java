@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,27 +17,18 @@ public class Private24ApiService {
 
     public List<Currency> executeCurrencies() {
         RestTemplate restTemplate = new RestTemplate();
-        Currency[] currencies = restTemplate.getForObject(uri, Currency[].class);
 
-        return Arrays.asList(currencies);
+        return List.of(Objects.requireNonNull(restTemplate.getForObject(uri, Currency[].class)));
     }
 
     public List<Currency> getStoredCurrencies() {
         return privat24CurrencyRepository.findAll();
     }
 
-    public void updateCurrency(Currency currency) {
-        Currency currencyByCurrencyId = privat24CurrencyRepository.findCurrencyByCurrencyId(currency.getCurrencyId());
+    public void updateCurrency(List<Currency> currencies) {
+        privat24CurrencyRepository.deleteAll();
+//        Currency currencyByCurrencyId = privat24CurrencyRepository.findCurrencyByCurrencyId(currency.getCurrencyId());
 
-        System.out.println(currencyByCurrencyId);
-        System.out.println(currency);
-
-//        currencyByCurrencyId.setUpdatedAt(new Date());
-//        currencyByCurrencyId.setBaseCcy(currency.getBaseCcy());
-//        currencyByCurrencyId.setBuy(currency.getBuy());
-//        currencyByCurrencyId.setCcy(currency.getCcy());
-//        currencyByCurrencyId.setSale(currency.getSale());
-//
-//        privat24CurrencyRepository.save(currencyByCurrencyId);
+        privat24CurrencyRepository.saveAll(currencies);
     }
 }

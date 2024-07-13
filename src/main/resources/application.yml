@@ -1,15 +1,17 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://haaaamburger:kunleM2004@spring.jvmf40p.mongodb.net/?appName=spring"
+      uri: mongodb+srv://haaaamburger:kunleM2004@spring.bac4wbl.mongodb.net/?retryWrites=true&w=majority&appName=spring
       database: "carsDB"
 
 jwt:
   secret: tUTZ8WnNpRzlEaYw2xyxDuIyRRzgiTUUXqSRoCZmcy6fJEU56nzO
   access-token:
-    ttl-millis: 60000
+    ttl-millis: 600000
+#    ttl-millis: 60000
   refresh-token:
-    ttl-millis: 120000
+    ttl-millis: 1200000
+#    ttl-millis: 120000
 springdoc:
   api-docs:
     path: "/api-docs"

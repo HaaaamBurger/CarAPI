@@ -14,6 +14,7 @@ public class CarMapper {
                 .model(car.getModel())
                 .owner(car.getOwner())
                 .producer(car.getProducer())
+                .price(car.getPrice())
                 .year(car.getYear())
                 .build();
     }
@@ -26,6 +27,7 @@ public class CarMapper {
                 .model(carDto.getModel())
                 .owner(carDto.getOwner())
                 .producer(carDto.getProducer())
+                .price(carDto.getPrice())
                 .year(carDto.getYear())
                 .build();
     }

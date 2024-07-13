@@ -3,6 +3,7 @@ package com.petProject.demo.controller;
 import com.petProject.demo.dto.CarDto;
 import com.petProject.demo.dto.ResponseDto;
 import com.petProject.demo.service.CarService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -18,7 +19,7 @@ public class CarController {
 
     @Secured({"SELLER", "ADMIN"})
     @PostMapping()
-    public ResponseEntity<ResponseDto<CarDto>> save(@RequestBody CarDto carDto) {
+    public ResponseEntity<ResponseDto<CarDto>> save(@Valid @RequestBody CarDto carDto) {
         CarDto savedCarDto = carService.save(carDto);
 
         return ResponseEntity

@@ -1,11 +1,19 @@
 package com.petProject.demo.service;
 
+import com.petProject.demo.api.Private24ApiService;
 import com.petProject.demo.common.mapper.CarMapper;
+import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.common.type.CarSchema;
+import com.petProject.demo.common.type.Currencies;
 import com.petProject.demo.dto.CarDto;
+import com.petProject.demo.dto.CarPriceDto;
+import com.petProject.demo.dto.CurrencyFixerDto;
+import com.petProject.demo.dto.UserDto;
 import com.petProject.demo.model.Car;
+import com.petProject.demo.model.Currency;
 import com.petProject.demo.repository.CarRepository;
 import com.petProject.demo.security.exception.NotFoundException;
+import com.petProject.demo.security.exception.PermissionNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +31,13 @@ public class CarService implements CarSchema {
 
     private final CustomUserService customUserService;
 
+    private final Private24ApiService private24ApiService;
+
     @Transactional
     @Override
     public CarDto save(CarDto carDto) {
         SecurityContext context = SecurityContextHolder.getContext();
+
         String username = customUserService
                 .loadUserByUsername(
                         context
@@ -35,7 +46,39 @@ public class CarService implements CarSchema {
                 )
                 .getUsername();
 
+        int carsListSize = carRepository.getAllByOwner(username).size();
+        UserDto userByEmail = customUserService.getUserByEmail(username);
+
+        if (carsListSize > 0 && userByEmail.getType().equals(AccountTypes.BASE)) {
+            throw new PermissionNotAllowedException("Your account type is Base, so you're not able to sell more than 1 car.");
+        }
+
         carDto.setOwner(username);
+
+        List<Currency> storedCurrencies = private24ApiService.getStoredCurrencies();
+        if (Currencies.USD.equals(carDto.getPrice().getCurrency())) {
+
+            String usdInUah = storedCurrencies.get(1).getBuy();
+            String eurInUah = storedCurrencies.get(0).getBuy();
+
+//            carDto.setPrice(CarPriceDto
+//                    .builder()
+//                            .currency(carDto.getPrice().getCurrency())
+//                            .value(carDto.getPrice().getValue())
+//                            .firstConvertedValue(CurrencyFixerDto
+//                                    .builder()
+//                                    .convertedCurrency(Currencies.UAH)
+//                                    .convertedValue(((int) Math.round(Double.parseDouble(usdInUah)) * carDto.getPrice().getValue()))
+//                                    .build()
+//                            )
+//                            .secondConvertedValue(CurrencyFixerDto
+//                                    .builder()
+//                                    .convertedCurrency(Currencies.EUR)
+//                                    .convertedValue(((int) carDto.getPrice().getValue() / Math.round(Double.parseDouble(eurInUah))))
+//                                    .build()
+//                            )
+//                    .build());
+        }
 
         Car savedCar = carRepository.save(carMapper.fromDto(carDto));
         return carMapper.toDto(savedCar);

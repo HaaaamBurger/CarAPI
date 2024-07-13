@@ -1,5 +1,7 @@
 package com.petProject.demo.model;
 
+import com.petProject.demo.dto.CarPriceDto;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,17 +20,15 @@ public class Car {
     @MongoId
     private String carId;
 
-    @NotBlank
     private String producer;
 
-    @NotNull
     private Short year;
     
-    @NotBlank
     private String model;
 
-    @NotBlank
     private String city;
+
+    private CarPriceDto price;
 
     private String owner;
 }
