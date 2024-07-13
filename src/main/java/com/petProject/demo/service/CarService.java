@@ -1,6 +1,7 @@
 package com.petProject.demo.service;
 
 import com.petProject.demo.api.Private24ApiService;
+import com.petProject.demo.auth.util.CarUtil;
 import com.petProject.demo.common.mapper.CarMapper;
 import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.common.type.CarSchema;
@@ -29,6 +30,8 @@ public class CarService implements CarSchema {
 
     private final CarMapper carMapper;
 
+    private final CarUtil carUtil;
+
     private final CustomUserService customUserService;
 
     private final Private24ApiService private24ApiService;
@@ -55,12 +58,11 @@ public class CarService implements CarSchema {
 
         carDto.setOwner(username);
 
-        List<Currency> storedCurrencies = private24ApiService.getStoredCurrencies();
+//        List<Currency> storedCurrencies = private24ApiService.getStoredCurrencies();
         if (Currencies.USD.equals(carDto.getPrice().getCurrency())) {
-
-            String usdInUah = storedCurrencies.get(1).getBuy();
-            String eurInUah = storedCurrencies.get(0).getBuy();
-
+            carUtil.setPriceWithCurrency(carDto, Currencies.USD);
+//            String usdInUah = storedCurrencies.get(1).getBuy();
+//            String eurInUah = storedCurrencies.get(0).getBuy();
 //            carDto.setPrice(CarPriceDto
 //                    .builder()
 //                            .currency(carDto.getPrice().getCurrency())
@@ -78,6 +80,10 @@ public class CarService implements CarSchema {
 //                                    .build()
 //                            )
 //                    .build());
+        } else if (Currencies.UAH.equals(carDto.getPrice().getCurrency())) {
+            carUtil.setPriceWithCurrency(carDto, Currencies.UAH);
+        } else if (Currencies.EUR.equals(carDto.getPrice().getCurrency())) {
+            carUtil.setPriceWithCurrency(carDto, Currencies.EUR);
         }
 
         Car savedCar = carRepository.save(carMapper.fromDto(carDto));
