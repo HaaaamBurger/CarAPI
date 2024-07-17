@@ -21,6 +21,8 @@ import com.petProject.demo.security.exception.EntityAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -54,6 +56,7 @@ public class AuthService {
 
         String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(hashedPassword);
+        userDto.setCars(new ArrayList<>());
         userDto.setType(AccountTypes.BASE);
 
         User savedUser = userRepository.save(userMapper.fromDto(userDto));

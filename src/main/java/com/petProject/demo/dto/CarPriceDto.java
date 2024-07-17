@@ -14,7 +14,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class CarPriceDto {
-    @NotBlank
+    @NotNull
     private Currencies currency;
 
     @Min(0)

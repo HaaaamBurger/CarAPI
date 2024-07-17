@@ -11,11 +11,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<AuthResponseDto<UserDto>> register(@Valid @RequestBody UserDto userDto) {
         UserDto savedUserDto = authService.register(userDto);
 
@@ -28,7 +29,7 @@ public class AuthController {
                 );
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDto<TokenDto>> login(@RequestBody AuthRequestDto authRequestDto) {
         TokenDto tokens = authService.login(authRequestDto);
         return ResponseEntity
@@ -41,7 +42,7 @@ public class AuthController {
                 );
     }
 
-    @PostMapping("/auth/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<AuthResponseDto<TokenDto>> refresh(@RequestHeader("Authorization") String token) {
         TokenDto tokens = authService.refresh(token);
         return ResponseEntity
