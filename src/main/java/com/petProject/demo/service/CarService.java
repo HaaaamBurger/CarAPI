@@ -1,7 +1,6 @@
 package com.petProject.demo.service;
 
 import com.petProject.demo.api.Private24ApiService;
-import com.petProject.demo.auth.util.CarUtil;
 import com.petProject.demo.common.mapper.CarMapper;
 import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.common.type.CarSchema;
@@ -30,8 +29,6 @@ public class CarService implements CarSchema {
 
     private final CarMapper carMapper;
 
-    private final CarUtil carUtil;
-
     private final CustomUserService customUserService;
 
     private final Private24ApiService private24ApiService;
@@ -58,14 +55,11 @@ public class CarService implements CarSchema {
 
         carDto.setOwner(username);
 
-//        List<Currency> storedCurrencies = private24ApiService.getStoredCurrencies();
-        CarDto carForSet = carUtil.setPriceWithCurrency(carDto);
-        Car savedCar = carRepository.save(carMapper.fromDto(carForSet));
-        return carMapper.toDto(savedCar);
-    }
+        List<Currency> storedCurrencies = private24ApiService.getStoredCurrencies();
+        if (Currencies.USD.equals(carDto.getPrice().getCurrency())) {
 
-    //            String usdInUah = storedCurrencies.get(1).getBuy();
-//            String eurInUah = storedCurrencies.get(0).getBuy();
+            String usdInUah = storedCurrencies.get(1).getBuy();
+            String eurInUah = storedCurrencies.get(0).getBuy();
 
 //            carDto.setPrice(CarPriceDto
 //                    .builder()
@@ -84,6 +78,11 @@ public class CarService implements CarSchema {
 //                                    .build()
 //                            )
 //                    .build());
+        }
+
+        Car savedCar = carRepository.save(carMapper.fromDto(carDto));
+        return carMapper.toDto(savedCar);
+    }
 
     @Override
     public List<CarDto> getAll() {

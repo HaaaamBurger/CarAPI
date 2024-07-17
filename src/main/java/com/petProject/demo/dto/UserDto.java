@@ -3,6 +3,7 @@ package com.petProject.demo.dto;
 import java.util.List;
 
 import com.petProject.demo.common.type.AccountTypes;
+import com.petProject.demo.common.type.Currencies;
 import com.petProject.demo.model.Car;
 
 import jakarta.validation.constraints.Min;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Setter
@@ -30,6 +32,7 @@ public class UserDto {
 
     private List<Car> cars;
 
+    @NotBlank
     private String role;
 
     private AccountTypes type;
