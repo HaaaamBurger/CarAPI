@@ -9,20 +9,24 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Builder
 @ToString
 public class CarPriceDto {
     @NotNull
-    private Currencies currency;
+    private Currencies createdWithCurrency;
 
     @Min(0)
     @NotNull
-    private long value;
+    private long createdWithValue;
 
-    private CurrencyFixerDto firstConvertedValue;
+    private List<CurrencyFixerDto> convertedCurrenciesFixerList;
 
-    private CurrencyFixerDto secondConvertedValue;
+//    private CurrencyFixerDto convertedCurrency;
+//
+//    private CurrencyFixerDto convertedCurrencyAdditional;
 
 }

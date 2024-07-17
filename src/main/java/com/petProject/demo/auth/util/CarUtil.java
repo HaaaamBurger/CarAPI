@@ -9,6 +9,7 @@ import com.petProject.demo.model.Currency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,21 +31,36 @@ public class CarUtil {
         int uahToEur = (int) Double.parseDouble(eurCurrency.getSale());
 
         CarPriceDto.CarPriceDtoBuilder priceDtoBuilder = CarPriceDto.builder()
-                .currency(carDto.getPrice().getCurrency())
-                .value(carDto.getPrice().getValue());
+                .createdWithCurrency(carDto.getPrice().getCreatedWithCurrency())
+                .createdWithValue(carDto.getPrice().getCreatedWithValue());
 
-        if (carDto.getPrice().getCurrency().equals(Currencies.UAH)) {
+        if (carDto.getPrice().getCreatedWithCurrency().equals(Currencies.UAH)) {
             priceDtoBuilder
-                    .firstConvertedValue(createCurrencyFixerDto(Currencies.USD, (int) (carDto.getPrice().getValue() * uahToUsd)))
-                    .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) (carDto.getPrice().getValue() * uahToEur)));
-        } else if (carDto.getPrice().getCurrency().equals(Currencies.USD)) {
+                    .convertedCurrenciesFixerList(List.of(
+                            createCurrencyFixerDto(Currencies.USD, (int) (carDto.getPrice().getCreatedWithValue() * uahToUsd)),
+                            createCurrencyFixerDto(Currencies.EUR, (int) (carDto.getPrice().getCreatedWithValue() * uahToEur)
+                            )));
+//            priceDtoBuilder
+//                    .firstConvertedValue(createCurrencyFixerDto(Currencies.USD, (int) (carDto.getPrice().getCreatedWithValue() * uahToUsd)))
+//                    .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) (carDto.getPrice().getCreatedWithValue() * uahToEur)));
+        } else if (carDto.getPrice().getCreatedWithCurrency().equals(Currencies.USD)) {
             priceDtoBuilder
-                    .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getValue() * uahToUsd)))
-                    .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) ((carDto.getPrice().getValue() * uahToUsd)) / uahToEur));
-        } else if (carDto.getPrice().getCurrency().equals(Currencies.EUR)) {
+                    .convertedCurrenciesFixerList(List.of(
+                            createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getCreatedWithValue() * uahToUsd)),
+                            createCurrencyFixerDto(Currencies.EUR, (int) ((carDto.getPrice().getCreatedWithValue() * uahToUsd)) / uahToEur)
+                            ));
+//            priceDtoBuilder
+//                    .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getCreatedWithValue() * uahToUsd)))
+//                    .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) ((carDto.getPrice().getCreatedWithValue() * uahToUsd)) / uahToEur));
+        } else if (carDto.getPrice().getCreatedWithCurrency().equals(Currencies.EUR)) {
             priceDtoBuilder
-                    .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getValue() * uahToEur)))
-                    .secondConvertedValue(createCurrencyFixerDto(Currencies.USD, (int) ((carDto.getPrice().getValue() * uahToEur) / uahToUsd)));
+                    .convertedCurrenciesFixerList(List.of(
+                            createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getCreatedWithValue() * uahToEur)),
+                            createCurrencyFixerDto(Currencies.USD, (int) ((carDto.getPrice().getCreatedWithValue() * uahToEur) / uahToUsd)))
+                    );
+//            priceDtoBuilder
+//                    .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getCreatedWithValue() * uahToEur)))
+//                    .secondConvertedValue(createCurrencyFixerDto(Currencies.USD, (int) ((carDto.getPrice().getCreatedWithValue() * uahToEur) / uahToUsd)));
         }
 
         carDto.setPrice(priceDtoBuilder.build());

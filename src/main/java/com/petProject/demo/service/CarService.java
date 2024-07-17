@@ -55,8 +55,8 @@ public class CarService implements CarSchema {
         }
 
         carDto.setOwner(username);
-
         Car savedCar = carRepository.save(carMapper.fromDto(carUtil.setPriceWithCurrency(carDto)));
+
         return carMapper.toDto(savedCar);
     }
 

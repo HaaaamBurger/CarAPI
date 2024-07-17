@@ -33,7 +33,7 @@ public class Private24ApiService {
     public void updateCurrency(List<Currency> currencies) {
         privat24CurrencyRepository.deleteAll();
 //        Currency currencyByCurrencyId = privat24CurrencyRepository.findCurrencyByCurrencyId(currency.getCurrencyId());
-
+// TODO Update logic for updating currencies. Now it's deleting and gets new one from API.
         privat24CurrencyRepository.saveAll(currencies);
     }
 }
