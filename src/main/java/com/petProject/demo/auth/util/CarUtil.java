@@ -25,8 +25,9 @@ public class CarUtil {
         Currency usdCurrency = storedCurrencies.get(USD_INDEX);
         Currency eurCurrency = storedCurrencies.get(EUR_INDEX);
 
-        int uahToUsd = (int) Double.parseDouble(usdCurrency.getBuy());
-        int uahToEur = (int) Double.parseDouble(eurCurrency.getBuy());
+
+        int uahToUsd = (int) Double.parseDouble(usdCurrency.getSale());
+        int uahToEur = (int) Double.parseDouble(eurCurrency.getSale());
 
         CarPriceDto.CarPriceDtoBuilder priceDtoBuilder = CarPriceDto.builder()
                 .currency(carDto.getPrice().getCurrency())
@@ -38,12 +39,12 @@ public class CarUtil {
                     .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) (carDto.getPrice().getValue() * uahToEur)));
         } else if (carDto.getPrice().getCurrency().equals(Currencies.USD)) {
             priceDtoBuilder
-                    .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getValue() / uahToUsd)))
-                    .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) (carDto.getPrice().getValue() / uahToEur)));
+                    .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getValue() * uahToUsd)))
+                    .secondConvertedValue(createCurrencyFixerDto(Currencies.EUR, (int) ((carDto.getPrice().getValue() * uahToUsd)) / uahToEur));
         } else if (carDto.getPrice().getCurrency().equals(Currencies.EUR)) {
             priceDtoBuilder
                     .firstConvertedValue(createCurrencyFixerDto(Currencies.UAH, (int) (carDto.getPrice().getValue() * uahToEur)))
-                    .secondConvertedValue(createCurrencyFixerDto(Currencies.USD, (int) (carDto.getPrice().getValue() * uahToEur)));
+                    .secondConvertedValue(createCurrencyFixerDto(Currencies.USD, (int) ((carDto.getPrice().getValue() * uahToEur) / uahToUsd)));
         }
 
         carDto.setPrice(priceDtoBuilder.build());

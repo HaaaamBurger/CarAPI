@@ -1,6 +1,7 @@
 package com.petProject.demo.service;
 
 import com.petProject.demo.api.Private24ApiService;
+import com.petProject.demo.auth.util.CarUtil;
 import com.petProject.demo.common.mapper.CarMapper;
 import com.petProject.demo.common.type.AccountTypes;
 import com.petProject.demo.common.type.CarSchema;
@@ -31,7 +32,7 @@ public class CarService implements CarSchema {
 
     private final CustomUserService customUserService;
 
-    private final Private24ApiService private24ApiService;
+    private final CarUtil carUtil;
 
     @Transactional
     @Override
@@ -55,32 +56,7 @@ public class CarService implements CarSchema {
 
         carDto.setOwner(username);
 
-        List<Currency> storedCurrencies = private24ApiService.getStoredCurrencies();
-        if (Currencies.USD.equals(carDto.getPrice().getCurrency())) {
-
-            String usdInUah = storedCurrencies.get(1).getBuy();
-            String eurInUah = storedCurrencies.get(0).getBuy();
-
-//            carDto.setPrice(CarPriceDto
-//                    .builder()
-//                            .currency(carDto.getPrice().getCurrency())
-//                            .value(carDto.getPrice().getValue())
-//                            .firstConvertedValue(CurrencyFixerDto
-//                                    .builder()
-//                                    .convertedCurrency(Currencies.UAH)
-//                                    .convertedValue(((int) Math.round(Double.parseDouble(usdInUah)) * carDto.getPrice().getValue()))
-//                                    .build()
-//                            )
-//                            .secondConvertedValue(CurrencyFixerDto
-//                                    .builder()
-//                                    .convertedCurrency(Currencies.EUR)
-//                                    .convertedValue(((int) carDto.getPrice().getValue() / Math.round(Double.parseDouble(eurInUah))))
-//                                    .build()
-//                            )
-//                    .build());
-        }
-
-        Car savedCar = carRepository.save(carMapper.fromDto(carDto));
+        Car savedCar = carRepository.save(carMapper.fromDto(carUtil.setPriceWithCurrency(carDto)));
         return carMapper.toDto(savedCar);
     }
 

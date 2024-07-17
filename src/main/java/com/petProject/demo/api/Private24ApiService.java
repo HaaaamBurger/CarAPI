@@ -22,7 +22,12 @@ public class Private24ApiService {
     }
 
     public List<Currency> getStoredCurrencies() {
-        return privat24CurrencyRepository.findAll();
+        List<Currency> currencies = privat24CurrencyRepository.findAll();
+        if (currencies.isEmpty()) {
+            return executeCurrencies();
+        }
+        return currencies;
+
     }
 
     public void updateCurrency(List<Currency> currencies) {

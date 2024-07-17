@@ -57,7 +57,7 @@ public class AuthService {
         String hashedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(hashedPassword);
         userDto.setCars(new ArrayList<>());
-        userDto.setType(AccountTypes.BASE);
+        userDto.setType(AccountTypes.PREMIUM);
 
         User savedUser = userRepository.save(userMapper.fromDto(userDto));
 
